@@ -140,20 +140,6 @@ pub fn add_workspace_handlers(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut Ev
     };
     listener.add_workspace_added_handler(handle_add_remove.clone());
     listener.add_workspace_destroy_handler(handle_add_remove.clone());
-
-    // Handle urgent windows.
-    let hyprland_clone = hyprland.clone();
-    listener.add_urgent_state_handler(move |address| {
-        let mut hl = hyprland_clone.lock().unwrap();
-        hl.urgent = address.to_string();
-        if let Some(client) = hl.clients.find_by_address(&hl.urgent) {
-            let id = client.workspace;
-            if let Some(workspace) = hl.workspaces.get_by_id(id) {
-                workspace.urgent = true;
-                println!("{}", json!(*hl));
-            }
-        }
-    });
 }
 
 fn get_monitors() -> HashMap<String, i128> {
