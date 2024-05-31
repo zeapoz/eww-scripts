@@ -146,11 +146,22 @@ pub fn add_workspace_handlers(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut Ev
         println!("{}", json!(*hyprland_clone));
     };
     listener.add_workspace_added_handler(handle_add_remove.clone());
+
+    let hyprland_clone = hyprland.clone();
+    let handle_add_remove = move |_| {
+        hyprland_clone.lock().unwrap().workspaces.update();
+        println!("{}", json!(*hyprland_clone));
+    };
     listener.add_workspace_destroy_handler(handle_add_remove.clone());
 }
 
 fn get_monitors() -> HashMap<String, i128> {
     Monitors::get()
-        .map(|monitors| monitors.map(|m| (m.name, m.id)).collect::<HashMap<_, _>>())
+        .map(|monitors| {
+            monitors
+                .into_iter()
+                .map(|m| (m.name, m.id))
+                .collect::<HashMap<_, _>>()
+        })
         .unwrap()
 }

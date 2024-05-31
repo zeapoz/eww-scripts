@@ -9,5 +9,5 @@ edition = "2021"
 members = ["hyprland"]
 
 [dependencies]
-clap = { version = "4.4.7", features = ["derive"] }
+clap = { version = "4.5.4", features = ["derive"] }
 hyprland = { path = "./hyprland" }

@@ -38,7 +38,10 @@
         packages.default = pkgs.rustPlatform.buildRustPackage {
           pname = manifest.name;
           version = manifest.version;
-          cargoLock.lockFile = ./Cargo.lock;
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+            outputHashes."hyprland-0.4.0-alpha.2" = "sha256-o0W6rNyXGZ9X1hy4Obp6qH+D/hd8SklM0Veixl0YxcY=";
+          };
           src = pkgs.lib.cleanSource ./.;
         };
       };
