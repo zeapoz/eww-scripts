@@ -30,7 +30,7 @@ impl From<String> for Submap {
 
 pub fn add_submap_handler(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut EventListener) {
     let hyprland_clone = hyprland.clone();
-    listener.add_sub_map_change_handler(move |map| {
+    listener.add_sub_map_changed_handler(move |map| {
         let map: Submap = map.into();
         let submap = match map.name.is_empty() {
             true => None,

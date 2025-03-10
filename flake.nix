@@ -40,7 +40,7 @@
           version = manifest.version;
           cargoLock = {
             lockFile = ./Cargo.lock;
-            outputHashes."hyprland-0.4.0-alpha.2" = "sha256-o0W6rNyXGZ9X1hy4Obp6qH+D/hd8SklM0Veixl0YxcY=";
+            outputHashes."hyprland-0.4.0-beta.2" = "sha256-UW/maNyrZ8F8zv/WcYbDbXxynn+vVJmrTTKuG1PHp0E=";
           };
           src = pkgs.lib.cleanSource ./.;
         };

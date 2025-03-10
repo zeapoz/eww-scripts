@@ -55,20 +55,20 @@ pub fn add_clients_handler(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut Event
     });
 
     let hyprland_clone = hyprland.clone();
-    listener.add_window_open_handler(move |_| {
+    listener.add_window_opened_handler(move |_| {
         hyprland_clone.lock().unwrap().clients = Clients::update();
         println!("{}", json!(*hyprland_clone));
     });
 
     let hyprland_clone = hyprland.clone();
-    listener.add_window_close_handler(move |_| {
+    listener.add_window_closed_handler(move |_| {
         hyprland_clone.lock().unwrap().clients = Clients::update();
         println!("{}", json!(*hyprland_clone));
     });
 
     // Handle urgent windows.
     let hyprland_clone = hyprland.clone();
-    listener.add_urgent_state_handler(move |address| {
+    listener.add_urgent_state_changed_handler(move |address| {
         let mut hl = hyprland_clone.lock().unwrap();
         hl.urgent = address.to_string();
         if let Some(client) = hl.clients.find_by_address(&hl.urgent) {

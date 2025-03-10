@@ -113,9 +113,9 @@ impl From<hyprland::data::Workspace> for Workspace {
 
 pub fn add_workspace_handlers(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut EventListener) {
     let hyprland_clone = hyprland.clone();
-    listener.add_workspace_change_handler(move |id| {
+    listener.add_workspace_changed_handler(move |event_data| {
         let mut hl = hyprland_clone.lock().unwrap();
-        let id: usize = id.to_string().parse().unwrap();
+        let id: usize = event_data.id.to_string().parse().unwrap();
         hl.focused = id;
 
         // Clear urgent status if workspace had one.
@@ -126,19 +126,19 @@ pub fn add_workspace_handlers(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut Ev
         println!("{}", json!(*hl));
     });
 
-    let hyprland_clone = hyprland.clone();
-    listener.add_active_monitor_change_handler(move |event| {
-        let mut hl = hyprland_clone.lock().unwrap();
-        let id: usize = event.workspace.to_string().parse().unwrap();
-        hl.focused = id;
-
-        // Clear urgent status if workspace had one.
-        if let Some(workspace) = hl.workspaces.get_by_id(id) {
-            workspace.urgent = false;
-        }
-
-        println!("{}", json!(*hl));
-    });
+    // let hyprland_clone = hyprland.clone();
+    // listener.add_active_monitor_changed_handler(move |event_data| {
+    //     let mut hl = hyprland_clone.lock().unwrap();
+    //     let id: usize = event.workspace.to_string().parse().unwrap();
+    //     hl.focused = id;
+    //
+    //     // Clear urgent status if workspace had one.
+    //     if let Some(workspace) = hl.workspaces.get_by_id(id) {
+    //         workspace.urgent = false;
+    //     }
+    //
+    //     println!("{}", json!(*hl));
+    // });
 
     let hyprland_clone = hyprland.clone();
     let handle_add_remove = move |_| {
@@ -152,7 +152,7 @@ pub fn add_workspace_handlers(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut Ev
         hyprland_clone.lock().unwrap().workspaces.update();
         println!("{}", json!(*hyprland_clone));
     };
-    listener.add_workspace_destroy_handler(handle_add_remove.clone());
+    listener.add_workspace_deleted_handler(handle_add_remove.clone());
 }
 
 fn get_monitors() -> HashMap<String, i128> {
