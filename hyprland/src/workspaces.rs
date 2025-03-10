@@ -126,19 +126,20 @@ pub fn add_workspace_handlers(hyprland: &Arc<Mutex<Hyprland>>, listener: &mut Ev
         println!("{}", json!(*hl));
     });
 
-    // let hyprland_clone = hyprland.clone();
-    // listener.add_active_monitor_changed_handler(move |event_data| {
-    //     let mut hl = hyprland_clone.lock().unwrap();
-    //     let id: usize = event.workspace.to_string().parse().unwrap();
-    //     hl.focused = id;
-    //
-    //     // Clear urgent status if workspace had one.
-    //     if let Some(workspace) = hl.workspaces.get_by_id(id) {
-    //         workspace.urgent = false;
-    //     }
-    //
-    //     println!("{}", json!(*hl));
-    // });
+    let hyprland_clone = hyprland.clone();
+    listener.add_active_monitor_changed_handler(move |event_data| {
+        let mut hl = hyprland_clone.lock().unwrap();
+        let workspace = event_data.workspace_name.unwrap();
+        let id: usize = workspace.to_string().parse().unwrap();
+        hl.focused = id;
+
+        // Clear urgent status if workspace had one.
+        if let Some(workspace) = hl.workspaces.get_by_id(id) {
+            workspace.urgent = false;
+        }
+
+        println!("{}", json!(*hl));
+    });
 
     let hyprland_clone = hyprland.clone();
     let handle_add_remove = move |_| {
